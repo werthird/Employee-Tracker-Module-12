@@ -1,0 +1,108 @@
+Employee Tracker - Content Management Systems(CMS)
+
+- Must create a walk through video 
+- Build a command-line application that allows me to view anything in a database
+
+================================================================
+
+Acceptance Critereia
+GIVEN a command-line application that accepts user input
+WHEN I start the application
+THEN I am presented with the following options: view all departments, view all roles, view all employees, add a department, add a role, add an employee, and update an employee role
+WHEN I choose to view all departments
+THEN I am presented with a formatted table showing department names and department ids
+WHEN I choose to view all roles
+THEN I am presented with the job title, role id, the department that role belongs to, and the salary for that role
+WHEN I choose to view all employees
+THEN I am presented with a formatted table showing employee data, including employee ids, first names, last names, job titles, departments, salaries, and managers that the employees report to
+WHEN I choose to add a department
+THEN I am prompted to enter the name of the department and that department is added to the database
+WHEN I choose to add a role
+THEN I am prompted to enter the name, salary, and department for the role and that role is added to the database
+WHEN I choose to add an employee
+THEN I am prompted to enter the employee’s first name, last name, role, and manager, and that employee is added to the database
+WHEN I choose to update an employee role
+THEN I am prompted to select an employee to update and their new role and this information is updated in the database 
+
+================================================================
+
+Downloads:
+- Use the MySQL2 package
+- Inquirer
+- Console.table package
+
+================================================================
+
+ToDo
+- Make sure queries are asynchronous
+- make seperate files containing functions for preforming specific SQL queries
+- Use a constructor function or class to help oraginze these files
+- 
+
+================================================================
+
+Command-Line Options:
+- view all departments
+    - department names
+    - department ids
+- view all roles 
+    - job title
+    - role id
+    - department for role
+    - salary for role
+- view all employees
+    - employee id
+    - first name
+    - last name
+    - job title
+    - department
+    - salary
+    - manager
+- add a department 
+    - prompted to enter name of department
+- add a role 
+    - prompted to enter
+      - name
+      - salary
+      - department
+- add an employee
+    - prompted to enter
+      - employee first name
+      - employee last name
+      - role
+      - mamager
+- update an employee role
+    - prompted to select employee
+      - prompted to update role
+
+================================================================
+
+Schema Layout:
+  Tables
+    department  
+      - id INT PRIMARY KEY
+      - name VARCHAR(30)
+    role  
+      - id INT PRIMARY KEY
+      - title VARCHAR(30)
+      - salary DECIMAL
+      - department_id INT
+    employee
+      - id INT PRIMARY KEY
+      - first_name VARCHAR(30)
+      - last_name VARCHAR(30)
+      - role_id INT
+      - manager_id INT
+
+================================================================
+
+Extra Credit
+- Research npm packages to help make MySQL password more secure
+- add the ability to update employee managers
+- add ability toi view employees by manager
+- add ability to view employees by department
+- add ability to delete departments, roles, and employees
+- add ability to view total budget of a department - the combined salary of all employees in that department
+- build tests for project
+
+
