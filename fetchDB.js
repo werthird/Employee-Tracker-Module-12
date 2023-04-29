@@ -1,26 +1,18 @@
 // Requirements
-const mysql = require('mysql2');
-const db = require('./db/connection.js');
+const db = require('./db/connectToDB.js');
 
+function getFromDB(query) {
 
-let dataResults = '';
-
-// Functions to fetch from database
-function getFromDB(callback) {
-  const query = 'SELECT * FROM employee';
-  db.query(query, callback);
+  return new Promise((resolve, reject) => {
+    db.query(query, function (err, results) {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(results);
+      }
+    });
+  });
 };
 
-function handleQueryResults(err, results) {
-  if (err) {
-    console.error(err);
-  } else {
-    dataResults = results;
-    console.table(dataResults);
-  }
-};
 
-// Run function to get data
-// getFromDB(handleQueryResults);
-
-module.export = dataResults;
+module.exports = getFromDB;
