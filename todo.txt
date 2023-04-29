@@ -30,6 +30,7 @@ Downloads:
 - Use the MySQL2 package
 - Inquirer
 - Console.table package
+- 
 
 ================================================================
 
@@ -105,4 +106,19 @@ Extra Credit
 - add ability to view total budget of a department - the combined salary of all employees in that department
 - build tests for project
 
+================================================================
 
+Don't use express, it's not front end
+build a database folder and make many 
+  Main
+    - db
+      - connection - connects database, and export 
+
+
+=====================================================
+I want to prompt the user if they want to grab a list of all the employees.
+When they select:
+  - Send responce to route files
+  - Route file will grab the info from the database and return it
+  - display the requested info into the console with console.table
+Display the questions again
