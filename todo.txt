@@ -122,3 +122,17 @@ When they select:
   - Route file will grab the info from the database and return it
   - display the requested info into the console with console.table
 Display the questions again
+
+
+
+        async function addEmployee() {
+          const empAnswers = await inquirer
+          .prompt(newEmpQues)
+          .then((answers) => {
+            let { first_name, last_name, role_id, manager_id } = answers;
+            query = `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ('${first_name}', '${last_name}', ${role_id}, ${manager_id});`;
+          });
+        };
+        return addEmployee().then(() => {
+          console.log('Employee added.')
+        });
