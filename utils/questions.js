@@ -1,4 +1,5 @@
-// Array of questions for user input
+//===============================================
+//        INITIAL QUESTIONS
 const initialQues = [
   {//Initial Questions
     type: 'list',
@@ -37,6 +38,8 @@ const initialQues = [
   }
 ];
 
+//===============================================
+//        NEW EMPLOYEE QUESTIONS
 const newEmpQues = [
   { // First Name
     type: 'input',
@@ -49,9 +52,23 @@ const newEmpQues = [
     message: 'What is the new employees last name?'
   },
   { // Role
-    type: 'input',
+    type: 'list',
     name: 'role_id',
-    message: 'What is the new employees role?'
+    message: 'What is the new employees role?',
+    choices: [
+      {
+        name: 'Sales Representative',
+        value: '1'
+      },
+      {
+        name: 'Sales Manager',
+        value: '2'
+      },
+      {
+        name: 'Customer Service Representative',
+        value: '3'
+      }
+    ]
   },
   { // Manager ID
     type: 'input',
@@ -60,33 +77,50 @@ const newEmpQues = [
   }
 ];
 
+//===============================================
+//        NEW DEPARTMENT QUESTIONS
+const newDepQues = [
+  {
+    type: 'input',
+    name: 'new_department',
+    message: 'What new department would you like to add?'
+  }
+];
 
-// const newEmpQues = [
-//   {//First Name
-//     type: 'input',
-//     message: 'What is the new employees first name?',
-//     name: 'first_name',
-//   },
-//   {//Last Name
-//     type: 'input',
-//     message: 'What is the new employees last name?',
-//     name: 'last_name',
-//   },
-//   {//Role
-//     type: 'input',
-//     message: 'What is their new role?',
-//     name: 'role',
-//   },
-//   {//Manager
-//     type: 'input',
-//     message: 'What is their managers id?',
-//     name: 'manager_id',
-//   }
-// ];
+//===============================================
+//        UPDATE EMPLOYEE ROLE QUESTIONS
+const upEmpRolQues = [
+  {
+    type: 'input',
+    name: 'up_employee',
+    message: 'What is the id of the employee you would like to update?'
+  },
+  {
+    type: 'list',
+    name: 'up_role',
+    message: 'What new role would you like this employee to have?',
+    choices: [
+      {
+        name: 'Sales Representative',
+        value: '1'
+      },
+      {
+        name: 'Sales Manager',
+        value: '2'
+      },
+      {
+        name: 'Customer Service Representative',
+        value: '3'
+      }
+    ]
+  }
+];
+
+
 
 module.exports = {
   initialQues,
-  newEmpQues
+  newEmpQues,
+  newDepQues,
+  upEmpRolQues
 };
-
-// module.exports = initialQues;
