@@ -2,7 +2,7 @@
 const inquirer = require('inquirer');
 const cTable = require('console.table');
 const db = require('./db/connectToDB.js');
-const { initialQues, newEmpQues, newDepQues, upEmpRolQues } = require('./utils/questions.js');
+const { initialQues, newEmpQues, newDepQues, newRolQues, upEmpRolQues } = require('./utils/questions.js');
 const fetchDB = require('./fetchDB.js');
 const process = require('node:process');
 
@@ -13,7 +13,7 @@ async function init() {
   const answers = await inquirer.prompt(initialQues);
 
   // Define request from user
-  const getEmpList = 'SELECT employee.id, employee.first_name, employee.last_name, roles.title, department.name AS department, roles.salary AS salaries FROM employee INNER JOIN roles ON employee.role_id=roles.id INNER JOIN department ON roles.department_id=department.id ORDER BY id;';
+  const getEmpList = "SELECT employee.id, employee.first_name, employee.last_name, roles.title, department.name AS department, roles.salary, CONCAT(m.first_name, ' ', m.last_name) AS manager FROM employee LEFT JOIN roles ON employee.role_id=roles.id LEFT JOIN department ON roles.department_id=department.id LEFT JOIN employee m ON employee.manager_id = m.id ORDER BY id ASC;";
   const getDepList = 'SELECT * FROM department ORDER BY id;';
   const getRolList = 'SELECT * FROM roles ORDER BY id;';
   let query;
@@ -42,6 +42,11 @@ async function init() {
       let newDep = await newDepData();
       await fetchDB(newDep);
       query = getDepList;
+      break;
+    case 'ADD_ROLE':
+      let newRol = await newRolData();
+      await fetchDB(newRol);
+      query = getRolList;
       break;
 
     // UPDATE TABLES
@@ -86,6 +91,14 @@ async function newDepData() {
   const answers = await inquirer.prompt(newDepQues);
   const { new_department } = answers;
   let queryString = `INSERT INTO department (name) VALUES ('${new_department}')`;
+  return queryString;
+};
+
+// New role questions
+async function newRolData() {
+  const answers = await inquirer.prompt(newRolQues);
+  const { role_title, role_salary, role_depart } = answers;
+  let queryString = `INSERT INTO roles (title, salary, department_id) VALUES ('${role_title}', '${role_salary}', '${role_depart}')`;
   return queryString;
 };
 

@@ -6,31 +6,35 @@ const initialQues = [
     message: 'What would you like to do?',
     name: 'request',
     choices: [
-      {
+      {// VIEW EMPLOYEES
         name: 'View All Employees',
         value: 'VIEW_EMPLOYEES'
       },
-      {
-        name: 'Add Employee',
-        value: 'ADD_EMPLOYEE'
-      },
-      {
-        name: 'Update Employee Role',
-        value: 'UPDATE_EMPLOYEE_ROLE'
-      },
-      {
+      {// VIEW ROLES
         name: 'View All Roles',
         value: 'VIEW_ROLES'
       },
-      {
+      {// VIEW DEPARTMENTS
         name: 'View All Departments',
         value: 'VIEW_DEPARTMENTS'
       },
-      {
+      {// ADD EMPLOYEE
+        name: 'Add Employee',
+        value: 'ADD_EMPLOYEE'
+      },
+      {// ADD DEPARTMENT
         name: 'Add Department',
         value: 'ADD_DEPARTMENT'
       },
-      {
+      {// ADD ROLE
+        name: 'Add Role',
+        value: 'ADD_ROLE'
+      },
+      {// UPDATE EMPLOYEE ROLE
+        name: 'Update Employee Role',
+        value: 'UPDATE_EMPLOYEE_ROLE'
+      },
+      {// QUIT
         name: 'Quit',
         value: 'QUIT'
       }
@@ -88,6 +92,40 @@ const newDepQues = [
 ];
 
 //===============================================
+//        NEW ROLE QUESTIONS
+const newRolQues = [
+  {
+    type: 'input',
+    name: 'role_title',
+    message: 'What is the new roles title?'
+  },
+  {
+    type: 'input',
+    name: 'role_salary',
+    message: 'What is the new roles salary?'
+  },
+  {
+    type: 'list',
+    name: 'role_depart',
+    message: 'What is the new roles department?',
+    choices: [
+      {
+        name: 'Sales',
+        value: '1'
+      },
+      {
+        name: 'Customer Service',
+        value: '2'
+      },
+      {
+        name: 'Design',
+        value: '3'
+      }
+    ]
+  }
+];
+
+//===============================================
 //        UPDATE EMPLOYEE ROLE QUESTIONS
 const upEmpRolQues = [
   {
@@ -122,5 +160,6 @@ module.exports = {
   initialQues,
   newEmpQues,
   newDepQues,
-  upEmpRolQues
+  upEmpRolQues,
+  newRolQues
 };
