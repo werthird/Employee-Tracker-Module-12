@@ -1,14 +1,34 @@
-const cTable = require('console.table');
-
-const list = [ 
-  { 
-    id: 1, 
-    name: 'Sales'
-  }, 
-  { id: 2, 
-    name: 'Customer Service' 
-  } 
-];
+const fetchDB = require('./fetchDB.js');
 
 
-console.log(`\n${cTable.getTable(list)}\n`);
+const buildNewRoleQuestions = async () => {
+  const getDepList = 'SELECT * FROM department ORDER BY id;';
+  const departments = await fetchDB(getDepList);
+  const newRolQues = [
+    {
+      type: 'input',
+      name: 'role_title',
+      message: 'What is the new roles title?'
+    },
+    {
+      type: 'input',
+      name: 'role_salary',
+      message: 'What is the new roles salary?'
+    },
+    {
+      type: 'list',
+      name: 'role_depart',
+      message: 'What department will the new role be in?',
+      choices: departments.map((department) => ({
+        name: department.name,
+        value: department.id.toString()
+      }))
+    }
+  ];
+  return newRolQues;
+};
+let rolQueArr;
+buildNewRoleQuestions().then((newRolQues) => {
+  rolQueArr = newRolQues;
+  console.log(rolQueArr);
+});

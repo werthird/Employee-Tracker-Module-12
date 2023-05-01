@@ -1,3 +1,6 @@
+const fetchDB = require('../fetchDB.js');
+
+
 //===============================================
 //        INITIAL QUESTIONS
 const initialQues = [
@@ -38,48 +41,43 @@ const initialQues = [
         name: 'Quit',
         value: 'QUIT'
       }
-    ]
+    ],
+    pageSize: 10 // increase the height of the list to 10
   }
 ];
 
 //===============================================
 //        NEW EMPLOYEE QUESTIONS
-const newEmpQues = [
-  { // First Name
-    type: 'input',
-    name: 'first_name',
-    message: 'What is the new employee first name?'
-  },
-  { // Last Name
-    type: 'input',
-    name: 'last_name',
-    message: 'What is the new employees last name?'
-  },
-  { // Role
-    type: 'list',
-    name: 'role_id',
-    message: 'What is the new employees role?',
-    choices: [
-      {
-        name: 'Sales Representative',
-        value: '1'
-      },
-      {
-        name: 'Sales Manager',
-        value: '2'
-      },
-      {
-        name: 'Customer Service Representative',
-        value: '3'
-      }
-    ]
-  },
-  { // Manager ID
-    type: 'input',
-    name: 'manager_id',
-    message: 'What is the new employees manager id?'
-  }
-];
+const newEmpQues = async (getRolList) => {
+  const roles = await fetchDB(getRolList);
+  const buildNewEmpQuestions = [
+    { // First Name
+      type: 'input',
+      name: 'first_name',
+      message: 'What is the new employee first name?'
+    },
+    { // Last Name
+      type: 'input',
+      name: 'last_name',
+      message: 'What is the new employees last name?'
+    },
+    { // Role
+      type: 'list',
+      name: 'role_id',
+      message: 'What is the new employees role?',
+      choices: roles.map((roles) => ({
+        name: roles.title,
+        value: roles.id.toString()
+      }))
+    },
+    { // Manager ID
+      type: 'input',
+      name: 'manager_id',
+      message: 'What is the new employees manager id?'
+    }
+  ];
+  return buildNewEmpQuestions;
+};
 
 //===============================================
 //        NEW DEPARTMENT QUESTIONS
@@ -93,37 +91,31 @@ const newDepQues = [
 
 //===============================================
 //        NEW ROLE QUESTIONS
-const newRolQues = [
-  {
-    type: 'input',
-    name: 'role_title',
-    message: 'What is the new roles title?'
-  },
-  {
-    type: 'input',
-    name: 'role_salary',
-    message: 'What is the new roles salary?'
-  },
-  {
-    type: 'list',
-    name: 'role_depart',
-    message: 'What is the new roles department?',
-    choices: [
-      {
-        name: 'Sales',
-        value: '1'
-      },
-      {
-        name: 'Customer Service',
-        value: '2'
-      },
-      {
-        name: 'Design',
-        value: '3'
-      }
-    ]
-  }
-];
+const newRolQues = async (getDepList) => {
+  const departments = await fetchDB(getDepList);
+  const buildNewRoleQuestions = [
+    {
+      type: 'input',
+      name: 'role_title',
+      message: 'What is the new roles title?'
+    },
+    {
+      type: 'input',
+      name: 'role_salary',
+      message: 'What is the new roles salary?'
+    },
+    {
+      type: 'list',
+      name: 'role_depart',
+      message: 'What department will the new role be in?',
+      choices: departments.map((department) => ({
+        name: department.name,
+        value: department.id.toString()
+      }))
+    }
+  ];
+  return buildNewRoleQuestions;
+};
 
 //===============================================
 //        UPDATE EMPLOYEE ROLE QUESTIONS
