@@ -1,7 +1,4 @@
 Still To do
-- Make adding new employee manager a name not an id number, but save it as an id number
-- Make so that when updating employee role, a list of current employees is seen. Look into autocomplete for employees
-
 
 ================================================================
 

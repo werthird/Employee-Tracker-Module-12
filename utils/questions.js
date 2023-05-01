@@ -48,9 +48,10 @@ const initialQues = [
 
 //===============================================
 //        NEW EMPLOYEE QUESTIONS
-const newEmpQues = async (getRolList) => {
+const newEmpQues = async (getRolList, getEmpManag) => {
   const roles = await fetchDB(getRolList);
-  const buildNewEmpQuestions = [
+  const managers = await fetchDB(getEmpManag);
+  const quesArray = [
     { // First Name
       type: 'input',
       name: 'first_name',
@@ -71,12 +72,22 @@ const newEmpQues = async (getRolList) => {
       }))
     },
     { // Manager ID
-      type: 'input',
+      type: 'list',
       name: 'manager_id',
-      message: 'What is the new employees manager id?'
+      message: 'Who is the new employees manager?',
+      choices: [
+        ...managers.map((manager) => ({
+          name: `${manager.first_name} ${manager.last_name} - ${manager.title}`,
+          value: manager.id.toString()
+        })),
+        {
+          name: 'No manager',
+          value: null
+        }
+      ]
     }
   ];
-  return buildNewEmpQuestions;
+  return quesArray;
 };
 
 //===============================================
@@ -93,7 +104,7 @@ const newDepQues = [
 //        NEW ROLE QUESTIONS
 const newRolQues = async (getDepList) => {
   const departments = await fetchDB(getDepList);
-  const buildNewRoleQuestions = [
+  const quesArray = [
     {
       type: 'input',
       name: 'role_title',
@@ -109,12 +120,12 @@ const newRolQues = async (getDepList) => {
       name: 'role_depart',
       message: 'What department will the new role be in?',
       choices: departments.map((department) => ({
-        name: department.name,
+        name: department.department,
         value: department.id.toString()
       }))
     }
   ];
-  return buildNewRoleQuestions;
+  return quesArray;
 };
 
 //===============================================
@@ -122,7 +133,7 @@ const newRolQues = async (getDepList) => {
 const upEmpRolQues = async (getEmpList, getRolList) => {
   const employees = await fetchDB(getEmpList);
   const roles = await fetchDB(getRolList);
-  const updateEmpRoleQuestions = [
+  const quesArray = [
     {
       type: 'list',
       name: 'up_employee',
@@ -142,7 +153,7 @@ const upEmpRolQues = async (getEmpList, getRolList) => {
       }))
     }
   ];
-  return updateEmpRoleQuestions;
+  return quesArray;
 };
 
 // EXPORTS

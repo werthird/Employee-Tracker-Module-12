@@ -11,8 +11,9 @@ const process = require('node:process');
 // GLOBAL VARIABLES
 
 const getEmpList = "SELECT employee.id, employee.first_name, employee.last_name, roles.title, department.name AS department, roles.salary, CONCAT(m.first_name, ' ', m.last_name) AS manager FROM employee LEFT JOIN roles ON employee.role_id=roles.id LEFT JOIN department ON roles.department_id=department.id LEFT JOIN employee m ON employee.manager_id = m.id ORDER BY id ASC;";
-const getDepList = 'SELECT * FROM department ORDER BY id;';
-const getRolList = 'SELECT * FROM roles ORDER BY id;';
+const getDepList = 'SELECT id, name AS department FROM department;';
+const getRolList = 'SELECT roles.id, roles.title, roles. salary, department.name AS department FROM roles LEFT JOIN department ON roles.department_id=department.id ORDER BY id ASC;';
+const getEmpManag = 'SELECT employee.id, employee.first_name, employee.last_name, roles.title FROM employee JOIN roles ON employee.role_id = roles.id WHERE employee.manager_id IS NULL ORDER BY id ASC;';
 
 
 // ====================================================================================
@@ -85,11 +86,13 @@ init();
 // ====================================================================================
 //  FUNCTIONS TO BUILD QUERY
 
-// New employee questions
+
+
+// ADD NEW EMPLOYEE QUESTIONS
 async function newEmpData() {
   let arr;
-  await newEmpQues(getRolList).then((buildNewEmpQuestions) => {
-    arr = buildNewEmpQuestions;
+  await newEmpQues(getRolList, getEmpManag).then((quesArray) => {
+    arr = quesArray;
   });
   const answers = await inquirer.prompt(arr);
   const { first_name, last_name, role_id, manager_id } = answers;
@@ -108,8 +111,8 @@ async function newDepData() {
 // New role questions
 async function newRolData() {
   let arr;
-  await newRolQues(getDepList).then((buildNewRoleQuestions) => {
-    arr = buildNewRoleQuestions;
+  await newRolQues(getDepList).then((quesArray) => {
+    arr = quesArray;
   });
   const answers = await inquirer.prompt(arr);
   const { role_title, role_salary, role_depart } = answers;
@@ -120,8 +123,8 @@ async function newRolData() {
 // Update employee role questions
 async function upEmpRolData() {
   let arr;
-  await upEmpRolQues(getEmpList, getRolList).then((updateEmpRoleQuestions) => {
-    arr = updateEmpRoleQuestions;
+  await upEmpRolQues(getEmpList, getRolList).then((quesArray) => {
+    arr = quesArray;
   });
   const answers = await inquirer.prompt(arr);
   const { up_employee, up_role } = answers;
