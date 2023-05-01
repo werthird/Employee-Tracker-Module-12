@@ -1,4 +1,4 @@
-// Requirements
+// REQUIREMENTS
 const inquirer = require('inquirer');
 const cTable = require('console.table');
 const db = require('./db/connectToDB.js');
@@ -8,7 +8,7 @@ const process = require('node:process');
 
 
 // ====================================================================================
-// Global Variables
+// GLOBAL VARIABLES
 
 const getEmpList = "SELECT employee.id, employee.first_name, employee.last_name, roles.title, department.name AS department, roles.salary, CONCAT(m.first_name, ' ', m.last_name) AS manager FROM employee LEFT JOIN roles ON employee.role_id=roles.id LEFT JOIN department ON roles.department_id=department.id LEFT JOIN employee m ON employee.manager_id = m.id ORDER BY id ASC;";
 const getDepList = 'SELECT * FROM department ORDER BY id;';
@@ -16,7 +16,7 @@ const getRolList = 'SELECT * FROM roles ORDER BY id;';
 
 
 // ====================================================================================
-// Function to initialize app
+// FUNCTION TO RUN COMMAND LINE
 async function init() {
   const answers = await inquirer.prompt(initialQues);
 
@@ -81,7 +81,9 @@ async function init() {
 // Function call to initialize app
 init();
 
-//
+
+// ====================================================================================
+//  FUNCTIONS TO BUILD QUERY
 
 // New employee questions
 async function newEmpData() {
@@ -117,7 +119,11 @@ async function newRolData() {
 
 // Update employee role questions
 async function upEmpRolData() {
-  const answers = await inquirer.prompt(upEmpRolQues);
+  let arr;
+  await upEmpRolQues(getEmpList, getRolList).then((updateEmpRoleQuestions) => {
+    arr = updateEmpRoleQuestions;
+  });
+  const answers = await inquirer.prompt(arr);
   const { up_employee, up_role } = answers;
   let queryString = `UPDATE employee SET role_id = ${up_role} WHERE id = ${up_employee};`;
   return queryString;

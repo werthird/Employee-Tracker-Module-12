@@ -119,35 +119,33 @@ const newRolQues = async (getDepList) => {
 
 //===============================================
 //        UPDATE EMPLOYEE ROLE QUESTIONS
-const upEmpRolQues = [
-  {
-    type: 'input',
-    name: 'up_employee',
-    message: 'What is the id of the employee you would like to update?'
-  },
-  {
-    type: 'list',
-    name: 'up_role',
-    message: 'What new role would you like this employee to have?',
-    choices: [
-      {
-        name: 'Sales Representative',
-        value: '1'
-      },
-      {
-        name: 'Sales Manager',
-        value: '2'
-      },
-      {
-        name: 'Customer Service Representative',
-        value: '3'
-      }
-    ]
-  }
-];
+const upEmpRolQues = async (getEmpList, getRolList) => {
+  const employees = await fetchDB(getEmpList);
+  const roles = await fetchDB(getRolList);
+  const updateEmpRoleQuestions = [
+    {
+      type: 'list',
+      name: 'up_employee',
+      message: 'What is the name of the employee you would like to update?',
+      choices: employees.map((employee) => ({
+        name: `${employee.first_name} ${employee.last_name}`,
+        value: employee.id.toString()
+      }))
+    },
+    { // Role
+      type: 'list',
+      name: 'up_role',
+      message: 'What new role would you like this employee to have?',
+      choices: roles.map((roles) => ({
+        name: roles.title,
+        value: roles.id.toString()
+      }))
+    }
+  ];
+  return updateEmpRoleQuestions;
+};
 
-
-
+// EXPORTS
 module.exports = {
   initialQues,
   newEmpQues,

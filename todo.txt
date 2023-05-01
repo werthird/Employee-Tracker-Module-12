@@ -1,7 +1,7 @@
-Employee Tracker - Content Management Systems(CMS)
+Still To do
+- Make adding new employee manager a name not an id number, but save it as an id number
+- Make so that when updating employee role, a list of current employees is seen. Look into autocomplete for employees
 
-- Must create a walk through video 
-- Build a command-line application that allows me to view anything in a database
 
 ================================================================
 
@@ -41,3 +41,5 @@ Extra Credit
 - add ability to delete departments, roles, and employees
 - add ability to view total budget of a department - the combined salary of all employees in that department
 - build tests for project
+
+
