@@ -1,7 +1,7 @@
 {
   "name": "employee-tracker-module-12",
   "version": "1.0.0",
-  "description": "## Your Task",
+  "description": "Commend-Line Employee Tracker",
   "main": "server.js",
   "scripts": {
     "test": "jest"
@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "asciiart-logo": "^0.2.7",
     "console-table-printer": "^2.11.1",
     "console.table": "^0.10.0",
     "inquirer": "^8.2.5",

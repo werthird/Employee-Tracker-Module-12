@@ -1,5 +1,5 @@
 // Requirements
-const db = require('./db/connectToDB.js');
+const db = require('../db/connectToDB.js');
 
 function getFromDB(query) {
 

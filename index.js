@@ -1,15 +1,15 @@
 // REQUIREMENTS
 const inquirer = require('inquirer');
+const logo = require('asciiart-logo');
 const cTable = require('console.table');
 const db = require('./db/connectToDB.js');
-const { initialQues, newEmpQues, newRolQues, newDepQues, upEmpRolQues } = require('./utils/questions.js');
-const fetchDB = require('./fetchDB.js');
+const { initialQues, getEmpByMan, newEmpQues, newRolQues, newDepQues, upEmpRolQues } = require('./utils/questions.js');
+const fetchDB = require('./utils/fetchDB.js');
 const process = require('node:process');
 
 
 // ====================================================================================
 // GLOBAL VARIABLES
-
 const getEmpList = "SELECT employee.id, employee.first_name, employee.last_name, roles.title, department.name AS department, roles.salary, CONCAT(m.first_name, ' ', m.last_name) AS manager FROM employee LEFT JOIN roles ON employee.role_id=roles.id LEFT JOIN department ON roles.department_id=department.id LEFT JOIN employee m ON employee.manager_id = m.id ORDER BY id ASC;";
 const getDepList = 'SELECT id, name AS department FROM department;';
 const getRolList = 'SELECT roles.id, roles.title, roles. salary, department.name AS department FROM roles LEFT JOIN department ON roles.department_id=department.id ORDER BY id ASC;';
@@ -36,6 +36,9 @@ async function init() {
       break;
     case 'VIEW_DEPARTMENTS':
       query = getDepList;
+      break;
+    case 'VIEW_EMPLOYEES_BY_MANAGER':
+      query = await getEmpByMangData();
       break;
 
     // ADD TO TABLES
@@ -67,27 +70,44 @@ async function init() {
       process.exit();
     }; 
 
-    // Resets the auto-incriment of the tables
-    await fetchDB('ALTER TABLE employee AUTO_INCREMENT = 1');
-    await fetchDB('ALTER TABLE department AUTO_INCREMENT = 1');
-    await fetchDB('ALTER TABLE roles AUTO_INCREMENT = 1');
+  // Resets the auto-incriment of the tables
+  await fetchDB('ALTER TABLE employee AUTO_INCREMENT = 1');
+  await fetchDB('ALTER TABLE department AUTO_INCREMENT = 1');
+  await fetchDB('ALTER TABLE roles AUTO_INCREMENT = 1');
 
-    // Send query string to fetchDB function then print to console
-    fetchDB(query).then((data) => {
-      console.log(`\n${cTable.getTable(data)}\n`);
-      init();
-    });
+  // Send query string to fetchDB function then print to console
+  fetchDB(query).then((data) => {
+    console.log(`\n${cTable.getTable(data)}\n`);
+    init();
+  });
 };
 
 // Function call to initialize app
+empTrackLogo();
 init();
 
 
 // ====================================================================================
 //  FUNCTIONS TO BUILD QUERY
+// ====================================================================================
+
+// ====================================================================================
+// VIEW EMPLOYEE BY MANAGER QUESTIONS
+async function getEmpByMangData() {
+  let arr;
+  await getEmpByMan(getEmpManag).then((quesArray) => {
+    arr = quesArray;
+  });
+  const answers = await inquirer.prompt(arr);
+  console.log(answers);
+  const { manager_id } = answers;
+  let queryString = `SELECT employee.id, employee.first_name, employee.last_name, roles.title, department.name AS department, roles.salary FROM employee LEFT JOIN roles ON employee.role_id=roles.id LEFT JOIN department ON roles.department_id=department.id WHERE employee.manager_id = ${manager_id} ORDER BY id ASC;`;
+  console.log(queryString);
+  return queryString;
+};
 
 
-
+// ====================================================================================
 // ADD NEW EMPLOYEE QUESTIONS
 async function newEmpData() {
   let arr;
@@ -100,7 +120,9 @@ async function newEmpData() {
   return queryString;
 };
 
-// New department questions
+
+// ====================================================================================
+// BUILD NEW DEPARTMENT
 async function newDepData() {
   const answers = await inquirer.prompt(newDepQues);
   const { new_department } = answers;
@@ -108,7 +130,9 @@ async function newDepData() {
   return queryString;
 };
 
-// New role questions
+
+// ====================================================================================
+// BUILD NEW ROLE
 async function newRolData() {
   let arr;
   await newRolQues(getDepList).then((quesArray) => {
@@ -120,7 +144,9 @@ async function newRolData() {
   return queryString;
 };
 
-// Update employee role questions
+
+// ====================================================================================
+// UPDATE EMPLOYEE ROLE
 async function upEmpRolData() {
   let arr;
   await upEmpRolQues(getEmpList, getRolList).then((quesArray) => {
@@ -130,4 +156,24 @@ async function upEmpRolData() {
   const { up_employee, up_role } = answers;
   let queryString = `UPDATE employee SET role_id = ${up_role} WHERE id = ${up_employee};`;
   return queryString;
+};
+
+
+
+// ====================================================================================
+//  FUNCTIONS TO BUILD LOGO
+function empTrackLogo() {
+  console.log(
+    logo({
+        name: 'Employee Tracker',
+        font: 'Standard',
+        lineChars: 2,
+        padding: 2,
+        margin: 3,
+        borderColor: 'grey',
+        logoColor: 'bold-green',
+        textColor: 'green',
+    })
+    .render()
+  );
 };

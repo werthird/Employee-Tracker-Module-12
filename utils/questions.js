@@ -1,4 +1,4 @@
-const fetchDB = require('../fetchDB.js');
+const fetchDB = require('./fetchDB.js');
 
 
 //===============================================
@@ -20,6 +20,10 @@ const initialQues = [
       {// VIEW DEPARTMENTS
         name: 'View All Departments',
         value: 'VIEW_DEPARTMENTS'
+      },
+      {// VIEW EMPLOYEES
+        name: 'View Employees by Manager',
+        value: 'VIEW_EMPLOYEES_BY_MANAGER'
       },
       {// ADD EMPLOYEE
         name: 'Add Employee',
@@ -46,6 +50,26 @@ const initialQues = [
   }
 ];
 
+
+// ====================================================================================
+//        GET EMPLOYEES BY MANAGER QUESTIONS
+const getEmpByMan = async (getEmpManag) => {
+  const managers = await fetchDB(getEmpManag);
+  const quesArray = [
+    { // Manager NAME
+      type: 'list',
+      name: 'manager_id',
+      message: 'Choose the manager to view employees by.',
+      choices: managers.map((manager) => ({
+          name: `${manager.first_name} ${manager.last_name} - ${manager.title}`,
+          value: manager.id.toString()
+        }))
+    }
+  ];
+  return quesArray;
+};
+
+
 //===============================================
 //        NEW EMPLOYEE QUESTIONS
 const newEmpQues = async (getRolList, getEmpManag) => {
@@ -71,7 +95,7 @@ const newEmpQues = async (getRolList, getEmpManag) => {
         value: roles.id.toString()
       }))
     },
-    { // Manager ID
+    { // Manager NAME
       type: 'list',
       name: 'manager_id',
       message: 'Who is the new employees manager?',
@@ -159,6 +183,7 @@ const upEmpRolQues = async (getEmpList, getRolList) => {
 // EXPORTS
 module.exports = {
   initialQues,
+  getEmpByMan,
   newEmpQues,
   newDepQues,
   upEmpRolQues,
