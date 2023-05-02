@@ -49,7 +49,7 @@ To get a look at the code used for this application, checkout our <a href="https
 
 <br />
 
-*Click on this [**LINK**](https://drive.google.com/file/d/10JYM4x4PT4Ik8wPBgvarisn7TW7G6Ej9/view) to get a walk through video of how to use the application.*
+*Click on this [**LINK**](https://drive.google.com/file/d/1Q_YGXqgQVfHeAEa-ZDAMld36Zna5kbSJ/view) to get a walk through video of how to use the application.*
 
 <br />
 
@@ -80,7 +80,7 @@ This is a command-line application that will take you through a series of prompt
 
 <br />
 
-*Click on this [**LINK**](https://drive.google.com/file/d/10JYM4x4PT4Ik8wPBgvarisn7TW7G6Ej9/view) to get a walk through video of how to use the application.*
+*Click on this [**LINK**](https://drive.google.com/file/d/1Q_YGXqgQVfHeAEa-ZDAMld36Zna5kbSJ/view) to get a walk through video of how to use the application.*
 
 <br />
 
