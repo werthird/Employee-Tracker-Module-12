@@ -21,8 +21,8 @@ async function init() {
   switch (answers.request) {
 
     // SELECT FROM TABLES
-    case 'VIEW_EMPLOYEES_BY_MANAGER':
-      query = await getEmpByMangData();
+    case 'UPDATE_EMPLOYEE_MANAGER':
+      query = await upEmpManData();
       break;
   }
 
@@ -43,9 +43,9 @@ const initialQues = [
     message: 'What would you like to do?',
     name: 'request',
     choices: [
-      {// VIEW EMPLOYEES
-        name: 'View Employees by Manager',
-        value: 'VIEW_EMPLOYEES_BY_MANAGER'
+      {// UPDATE EMPLOYEE MANAGER
+        name: 'Update an Employees Manager',
+        value: 'UPDATE_EMPLOYEE_MANAGER'
       }
     ]
   }
@@ -54,33 +54,43 @@ const initialQues = [
 
 // ====================================================================================
 // VIEW EMPLOYEE BY MANAGER QUESTIONS
-async function getEmpByMangData() {
+async function upEmpManData() {
   let arr;
-  await getEmpByMan().then((quesArray) => {
+  await upEmpManQues(getEmpList, getEmpManag).then((quesArray) => {
     arr = quesArray;
   });
   const answers = await inquirer.prompt(arr);
   console.log(answers);
-  const { manager_id } = answers;
-  let queryString = `SELECT employee.id, employee.first_name, employee.last_name, roles.title, department.name AS department, roles.salary FROM employee LEFT JOIN roles ON employee.role_id=roles.id LEFT JOIN department ON roles.department_id=department.id WHERE employee.manager_id = ${manager_id} ORDER BY id ASC;`;
+  const { up_employee, up_manager } = answers;
+  let queryString = `UPDATE employee SET manager_id = ${up_manager} WHERE id = ${up_employee};`;
   console.log(queryString);
   return queryString;
 };
 
 
 // ====================================================================================
-//        GET EMPLOYEES BY MANAGER QUESTIONS
-const getEmpByMan = async () => {
-  const managers = await fetchDB(getEmpManag);
+//        UPDATE EMPLOYEE MANAGER 
+const upEmpManQues = async (getEmpList, getEmpManag) => {
+  const employees = await fetchDB(getEmpList);
+  const manager = await fetchDB(getEmpManag);
   const quesArray = [
-    { // Manager NAME
+    {
       type: 'list',
-      name: 'manager_id',
-      message: 'Choose the manager to view employees by.',
-      choices: managers.map((manager) => ({
-          name: `${manager.first_name} ${manager.last_name} - ${manager.title}`,
-          value: manager.id.toString()
-        }))
+      name: 'up_employee',
+      message: 'What is the name of the employee you would like to update?',
+      choices: employees.map((employee) => ({
+        name: `${employee.first_name} ${employee.last_name}`,
+        value: employee.id.toString()
+      }))
+    },
+    { // Role
+      type: 'list',
+      name: 'up_manager',
+      message: 'What new manager would you like this employee to have?',
+      choices: manager.map((manager) => ({
+        name: `${manager.first_name} ${manager.last_name} - ${manager.title}`,
+        value: manager.id.toString()
+      }))
     }
   ];
   return quesArray;

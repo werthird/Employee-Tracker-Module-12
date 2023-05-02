@@ -1,10 +1,8 @@
 
 Extra Credit
-- Research npm packages to help make MySQL password more secure
 - add the ability to update employee managers
-- add ability to view employees by department
 - add ability to delete departments, roles, and employees
 - add ability to view total budget of a department - the combined salary of all employees in that department
-- build tests for project
+
 
 

@@ -3,7 +3,7 @@ const inquirer = require('inquirer');
 const logo = require('asciiart-logo');
 const cTable = require('console.table');
 const db = require('./db/connectToDB.js');
-const { initialQues, getEmpByMan, newEmpQues, newRolQues, newDepQues, upEmpRolQues } = require('./utils/questions.js');
+const { initialQues, getEmpByMan, getEmpByDep, newEmpQues, newRolQues, newDepQues, upEmpManQues, upEmpRolQues } = require('./utils/questions.js');
 const fetchDB = require('./utils/fetchDB.js');
 const process = require('node:process');
 
@@ -40,6 +40,9 @@ async function init() {
     case 'VIEW_EMPLOYEES_BY_MANAGER':
       query = await getEmpByMangData();
       break;
+    case 'VIEW_EMPLOYEES_BY_DEPARTMENT':
+      query = await getEmpByDepData();
+      break;
 
     // ADD TO TABLES
     case 'ADD_EMPLOYEE':
@@ -59,9 +62,14 @@ async function init() {
       break;
 
     // UPDATE TABLES
+    case 'UPDATE_EMPLOYEE_MANAGER':
+      let upMan = await upEmpManData();
+      await fetchDB(upMan);
+      query = getEmpList;
+      break;
     case 'UPDATE_EMPLOYEE_ROLE':
-      let upEmp = await upEmpRolData();
-      await fetchDB(upEmp);
+      let upRol = await upEmpRolData();
+      await fetchDB(upRol);
       query = getEmpList;
       break;
 
@@ -92,23 +100,35 @@ init();
 // ====================================================================================
 
 // ====================================================================================
-// VIEW EMPLOYEE BY MANAGER QUESTIONS
+// VIEW EMPLOYEE BY MANAGER
 async function getEmpByMangData() {
   let arr;
   await getEmpByMan(getEmpManag).then((quesArray) => {
     arr = quesArray;
   });
   const answers = await inquirer.prompt(arr);
-  console.log(answers);
   const { manager_id } = answers;
   let queryString = `SELECT employee.id, employee.first_name, employee.last_name, roles.title, department.name AS department, roles.salary FROM employee LEFT JOIN roles ON employee.role_id=roles.id LEFT JOIN department ON roles.department_id=department.id WHERE employee.manager_id = ${manager_id} ORDER BY id ASC;`;
-  console.log(queryString);
   return queryString;
 };
 
 
 // ====================================================================================
-// ADD NEW EMPLOYEE QUESTIONS
+// VIEW EMPLOYEE BY DEPARTMENT
+async function getEmpByDepData() {
+  let arr;
+  await getEmpByDep(getDepList).then((quesArray) => {
+    arr = quesArray;
+  });
+  const answers = await inquirer.prompt(arr);
+  const { department_id } = answers;
+  let queryString = `SELECT employee.id, employee.first_name, employee.last_name, roles.title, department.name AS department, roles.salary FROM employee LEFT JOIN roles ON employee.role_id = roles.id LEFT JOIN department ON roles.department_id = department.id WHERE department.id = ${department_id} ORDER BY id ASC;`;
+  return queryString;
+};
+
+
+// ====================================================================================
+// ADD NEW EMPLOYEE
 async function newEmpData() {
   let arr;
   await newEmpQues(getRolList, getEmpManag).then((quesArray) => {
@@ -141,6 +161,20 @@ async function newRolData() {
   const answers = await inquirer.prompt(arr);
   const { role_title, role_salary, role_depart } = answers;
   let queryString = `INSERT INTO roles (title, salary, department_id) VALUES ('${role_title}', '${role_salary}', '${role_depart}')`;
+  return queryString;
+};
+
+
+// ====================================================================================
+// UPDATE EMPLOYEE MANAGER
+async function upEmpManData() {
+  let arr;
+  await upEmpManQues(getEmpList, getEmpManag).then((quesArray) => {
+    arr = quesArray;
+  });
+  const answers = await inquirer.prompt(arr);
+  const { up_employee, up_manager } = answers;
+  let queryString = `UPDATE employee SET manager_id = ${up_manager} WHERE id = ${up_employee};`;
   return queryString;
 };
 

@@ -21,9 +21,13 @@ const initialQues = [
         name: 'View All Departments',
         value: 'VIEW_DEPARTMENTS'
       },
-      {// VIEW EMPLOYEES
+      {// VIEW EMPLOYEES BY MANAGER
         name: 'View Employees by Manager',
         value: 'VIEW_EMPLOYEES_BY_MANAGER'
+      },
+      {// VIEW EMPLOYEES BY DEPARTMENT
+        name: 'View Employees by Department',
+        value: 'VIEW_EMPLOYEES_BY_DEPARTMENT'
       },
       {// ADD EMPLOYEE
         name: 'Add Employee',
@@ -36,6 +40,10 @@ const initialQues = [
       {// ADD ROLE
         name: 'Add Role',
         value: 'ADD_ROLE'
+      },
+      {// UPDATE EMPLOYEE MANAGER
+        name: 'Update an Employees Manager',
+        value: 'UPDATE_EMPLOYEE_MANAGER'
       },
       {// UPDATE EMPLOYEE ROLE
         name: 'Update Employee Role',
@@ -63,6 +71,25 @@ const getEmpByMan = async (getEmpManag) => {
       choices: managers.map((manager) => ({
           name: `${manager.first_name} ${manager.last_name} - ${manager.title}`,
           value: manager.id.toString()
+        }))
+    }
+  ];
+  return quesArray;
+};
+
+
+// ====================================================================================
+//        GET EMPLOYEES BY MANAGER QUESTIONS
+const getEmpByDep = async (getDepList) => {
+  const department = await fetchDB(getDepList);
+  const quesArray = [
+    { // Manager NAME
+      type: 'list',
+      name: 'department_id',
+      message: 'Choose the department to view employees by.',
+      choices: department.map((department) => ({
+          name: department.department,
+          value: department.id.toString()
         }))
     }
   ];
@@ -152,6 +179,35 @@ const newRolQues = async (getDepList) => {
   return quesArray;
 };
 
+// ====================================================================================
+//        UPDATE EMPLOYEE MANAGER 
+const upEmpManQues = async (getEmpList, getEmpManag) => {
+  const employees = await fetchDB(getEmpList);
+  const manager = await fetchDB(getEmpManag);
+  const quesArray = [
+    {
+      type: 'list',
+      name: 'up_employee',
+      message: 'What is the name of the employee you would like to update?',
+      choices: employees.map((employee) => ({
+        name: `${employee.first_name} ${employee.last_name}`,
+        value: employee.id.toString()
+      }))
+    },
+    { // Role
+      type: 'list',
+      name: 'up_manager',
+      message: 'What new manager would you like this employee to have?',
+      choices: manager.map((manager) => ({
+        name: `${manager.first_name} ${manager.last_name} - ${manager.title}`,
+        value: manager.id.toString()
+      }))
+    }
+  ];
+  return quesArray;
+};
+
+
 //===============================================
 //        UPDATE EMPLOYEE ROLE QUESTIONS
 const upEmpRolQues = async (getEmpList, getRolList) => {
@@ -184,8 +240,10 @@ const upEmpRolQues = async (getEmpList, getRolList) => {
 module.exports = {
   initialQues,
   getEmpByMan,
+  getEmpByDep,
   newEmpQues,
   newDepQues,
   upEmpRolQues,
+  upEmpManQues,
   newRolQues
 };
